@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "Hash": "djqj1nBWbFoJwmZdcdIopWYPg17z79b1BObR+Zgq/kQ=",
+  "Source": "SecretMessageApi",
+  "BasePath": "_content/SecretMessageApi",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": []
+}
