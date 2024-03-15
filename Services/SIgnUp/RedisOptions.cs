@@ -2,16 +2,22 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Distributed;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using StackExchange.Redis;
+using static Messenger.Services.SIgnUp.RedisOptions;
 
 namespace Messenger.Services.SIgnUp
 {
-
+    public enum When {
+        NotExists,
+        Exists
+    }
 
     public interface IRedisOptions
     {
-        public Task SetKeyValueForUserById(Guid id, string value, CancellationToken cancellationToken = default);
-        public Task<string>? GetUserAutheKeyById(Guid id, CancellationToken cancellationToken = default);
+        Task<string>? GetUserAutheKeyById(Guid id, CancellationToken cancellationToken = default);
+         Task<bool> SetKeyValueHaveTimeSpan(Guid id , string value , int time, CancellationToken cancellationToken = default);
+        Task<bool> UpdateUserById(Guid Id, string value);
     }
     public class RedisOptions : IRedisOptions
     {
@@ -26,27 +32,51 @@ namespace Messenger.Services.SIgnUp
             _logger = logger;
         }
 
-
+        // Will retrieve a value with Id Specify 
         public  async Task<string>? GetUserAutheKeyById(Guid id,CancellationToken cancellationToken = default)
         {
             string key = $"member:{id}";
             var result = await _cache.GetStringAsync(key);
-            Console.WriteLine($"Đây là authe Key: {result}");
+          
             return result;
         }
+       
 
-        public async Task SetKeyValueForUserById(Guid id , string value ,CancellationToken cancellationToken = default)
+        // Set a token that have TimeSpan specified by the function call it 
+        public async  Task<bool> SetKeyValueHaveTimeSpan(Guid id, string value, int SetMinutes, CancellationToken cancellationToken = default)
+
         {
-            var key = $"member:{id}";
-            await _cache.SetStringAsync(key, value, new DistributedCacheEntryOptions
+            try
             {
-                AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(3)
-            });
-
+                var key = $"member:{id}";
+                await _cache.SetStringAsync(key, value, new DistributedCacheEntryOptions
+                {
+                    AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(SetMinutes)
+                });
+                return true;
+            }catch(Exception e)
+            {
+                _logger.LogInformation("{message}", e.Message);
+                return false;
+            }
 
         }
 
+        // Create or update a token that dont need timespan 
+        public async Task<bool> UpdateUserById(Guid Id, string value)
+        {
+            try
+            {
+                var key = $"member:{Id}";
+                await _cache.SetStringAsync(key, value);
 
+                return true;
+            }catch(Exception e)
+            {
+                _logger.LogInformation("{message}", e.Message);
+                return false;
+            }
+        }
 
     }
 }

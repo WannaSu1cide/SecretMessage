@@ -1,22 +1,22 @@
 ﻿{
    "CodeGenerationMode": 4,
-   "ContextClassName": "SignUpContext",
+   "ContextClassName": "UserRoleContext",
    "ContextNamespace": null,
    "DefaultDacpacSchema": null,
    "FilterSchemas": false,
    "IncludeConnectionString": false,
    "ModelNamespace": null,
    "OutputContextPath": null,
-   "OutputPath": "Models",
+   "OutputPath": "UserRoleDb",
    "PreserveCasingWithRegex": true,
-   "ProjectRootNamespace": "Messenger.SignUp",
+   "ProjectRootNamespace": "Messenger.UserRol",
    "Schemas": null,
    "SelectedHandlebarsLanguage": 2,
    "SelectedToBeGenerated": 0,
    "T4TemplatePath": null,
    "Tables": [
       {
-         "Name": "[dbo].[UserAccount]",
+         "Name": "[dbo].[UserRoles]",
          "ObjectType": 0
       }
    ],
